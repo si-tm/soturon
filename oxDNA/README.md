@@ -25,4 +25,51 @@ LAMMPS用のoxDNAおよびoxDNA2モデルの実装は、Oliver Henrichが開発�
 
 ## docker imageを作る
 - [参考1](https://maku77.github.io/docker/create-image.html)
+- 参考
+```
+FROM python:3.9-buster as builder
 
+ENV PYTHONUNBUFFERED=1
+
+RUN mkdir app
+
+WORKDIR /app
+
+COPY Pipfile.lock /app/
+
+RUN pip install -U pip && \
+    pip install pipenv==2021.5.29 && \
+    pip install numpy && \
+    pip intall signalz && \
+    pipenv sync --system && \
+    pip uninstall --yes pipenv
+
+FROM python:3.9-slim-buster as production
+
+ENV PYTHONUNBUFFERED=1
+
+RUN mkdir app
+
+WORKDIR /app
+
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages/
+COPY --from=builder /app /app/
+
+CMD ["/usr/local/bin/python3","resovoir_test/main.py"]
+```
+```
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive 
+RUN apt-get update && \
+    apt-get install -y build-essential cmake clang python3-dev vim
+WORKDIR code
+COPY oxDNA .
+RUN cd oxDNA && mkdir build 
+RUN cd oxDNA/build && cmake .. && make -j4 
+```
+```
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y build-essential cmake clang libssl-dev vim
+```
