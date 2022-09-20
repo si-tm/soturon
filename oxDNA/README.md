@@ -73,3 +73,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y build-essential cmake clang libssl-dev vim
 ```
+
+### 必要事項
+- c++
+    - gcc 4.6.x
+    - gcc >= 4.1.x and icpc >= 10
+    - enabling CUDA 
+- git clone 
+- ubuntuをベースに
