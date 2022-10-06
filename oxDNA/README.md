@@ -73,6 +73,23 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y build-essential cmake clang libssl-dev vim
 ```
+```
+FROM ubuntu:20.04
+ ENV DEBIAN_FRONTEND=noninteractive
+ 
+RUN apt-get update && \
+   apt-get install -y build-essential cmake clang python3-dev vim
+RUN apt update -y
+RUN apt install git -y
+WORKDIR code
+RUN git clone --depth 1 https://github.com/lorenzo-rovigatti/oxDNA.git
+RUN mkdir oxDNA/build
+RUN mkdir oxDNA/results
+RUN cd oxDNA/build && cmake .. && make -j4
+RUN sed -i "s;=../..;=/code/oxDNA;" oxDNA/examples/HAIRPIN/run.sh
+RUN sed -i "s;bin/oxDNA;build/bin/oxDNA;" oxDNA/examples/HAIRPIN/run.sh
+RUN echo "mv -f *.dat /code/oxDNA/results" >> oxDNA/examples/HAIRPIN/run.sh
+```
 
 ### 必要事項
 - c++
