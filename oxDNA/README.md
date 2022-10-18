@@ -188,3 +188,61 @@ CCTGTA
 
 出力されたコンフィギュレーションとトポロジーはそれぞれ generated.dat と generated.top に格納される。このスクリプトはヌクレオチドの速度と角速度を0に初期化するので、分子（またはブラウン）力学シミュレーションを行う場合は、入力ファイルに refresh_vel = 1 を記述することを忘れないでください。
 
+**Analysis of configurations**
+
+configurationsはoutput_bonds.pyによって${oxDNA}/UTILS/ directoryで分析することができます。
+このプログラムはコマンドラインで実行し、input fileとconfiguration/trajectory file、optional numberを引数として持ちます。optional number分だけループします。
+使い方↓  
+```
+${oxDNA}/UTILS/output_bonds.py <input_file> <trajectory_file> [counter]
+```
+このプログラムは標準エラーと相互エネルギーに関するエラーのデバッグ情報を吐きます。
+相互エネルギーがゼロでないそれぞれのヌクレオチドのペアを報告します。
+
+この出力結果はconfigurationの分析結果を容易に追跡することができます
+相互エネルギーがゼロでないそれぞれのヌクレオチドのペアに安知して、以下のものをprintします
+
+- The id of the two particles (starting from 0) (二つの粒子のid)
+- The total interaction energy (相互エネルギーの総和)
+- The hydrogen bonding (base pairing) energy (水素結合エネルギー)
+- The stacking energy (積層欠陥エネルギー???)
+- The cross stacking energy (??)
+- The excluded volume energy ([wiki](https://en.wikipedia.org/wiki/Excluded_volume))
+- The FENE interaction energy (??)
+A letter indicating a status code. This will be N for pairs that interact through bonded interactions (i.e. they are neighbors along a strand) and it will be H when a base pair is present. Our definition of base pair is when two nucleotides have a hydrogen bonding energy less than -0.1 in simulation units (see Ref. 2).
+
+**Geometry of the Model**
+configuration/trajectory では、ヌクレオチドの位置や分子の向きが記載されています。
+もし、モデル内での個々の相互作用部位が知りたければ、計算する必要があります。
+
+In oxDNA1:
+
+Hydrogen-bonding/repulsion site within the base {\displaystyle =r+0.4\,a_{1}}{\displaystyle =r+0.4\,a_{1}}
+
+Stacking site within the base {\displaystyle =r+0.34\,a_{1}}{\displaystyle =r+0.34\,a_{1}}
+
+Backbone repulsion site (主鎖反発部位){\displaystyle =r-0.4\,a_{1}}{\displaystyle =r-0.4\,a_{1}}
+
+In oxDNA2:
+
+Hydrogen-bonding site within the base {\displaystyle =r+0.4\,a_{1}}{\displaystyle =r+0.4\,a_{1}}
+
+Stacking site within the base {\displaystyle =r+0.34\,a_{1}}{\displaystyle =r+0.34\,a_{1}}
+
+Backbone repulsion site {\displaystyle =r-0.34\,a_{1}+0.3408\,a_{2}}{\displaystyle =r-0.34\,a_{1}+0.3408\,a_{2}}
+
+**External Forces**
+飛ばす
+
+**Visualisation of structures**
+
+xyz format
+```
+$oxDNA/UTILS/traj2vis.py xyz <trajectory> <topology> 
+```
+pdb format
+```
+$oxDNA/UTILS/traj2chimera.py <trajectory> <topology> 
+```
+cogli2
+oxView
