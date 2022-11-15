@@ -13,7 +13,7 @@ steps = 10
 - [energy.dat](./energy.dat)  
  **[時間 (ステップ * dt)][ポテンシャルエネルギー][運動エネルギー][全エネルギー]**
 - [hb_energy.dat](./hb_energy.dat)  
-?? 
+It outputs the hydrogen bond energy (line 50) every 10000 steps (line 44) 
 - [last_conf.dat](./last_conf.dat)  
 this is the file where the last configuration is saved (when the program finishes or is killed). Set to last_conf.dat by default  
 - [log_seq_dep.dat](./log_seq_dep.dat)  
